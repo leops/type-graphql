@@ -1,6 +1,7 @@
 import { getMetadataStorage } from "../metadata/getMetadataStorage";
 import { ClassTypeResolver, ResolverClassOptions } from "./types";
 import { ClassType } from "../interfaces";
+import isClass from "is-class";
 
 export function Resolver(): ClassDecorator;
 export function Resolver(options: ResolverClassOptions): ClassDecorator;
@@ -24,7 +25,7 @@ export function Resolver(
 
   return target => {
     const getObjectType = objectTypeOrTypeFunc
-      ? objectTypeOrTypeFunc.prototype
+      ? isClass(objectTypeOrTypeFunc)
         ? () => objectTypeOrTypeFunc as ClassType
         : (objectTypeOrTypeFunc as ClassTypeResolver)
       : () => {

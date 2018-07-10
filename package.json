@@ -30,6 +30,7 @@
     "graphql-query-complexity": "^0.3.0",
     "graphql-subscriptions": "^1.1.0",
     "semver": "^6.2.0",
+    "is-class": "0.0.5",
     "tslib": "^1.10.0"
   },
   "devDependencies": {

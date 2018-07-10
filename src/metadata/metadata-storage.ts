@@ -23,6 +23,7 @@ import {
 } from "./utils";
 import { ObjectClassMetadata } from "./definitions/object-class-metdata";
 import { InterfaceClassMetadata } from "./definitions/interface-class-metadata";
+import isClass from "is-class";
 
 export class MetadataStorage {
   queries: ResolverMetadata[] = [];
@@ -227,7 +228,7 @@ export class MetadataStorage {
       let superResolver = Object.getPrototypeOf(target);
 
       // copy and modify metadata of resolver from parent resolver class
-      while (superResolver.prototype) {
+      while (isClass(superResolver)) {
         const superResolverMetadata = this.resolverClasses.find(it => it.target === superResolver);
         if (superResolverMetadata) {
           this.queries.unshift(...mapSuperResolverHandlers(this.queries, superResolver, def));

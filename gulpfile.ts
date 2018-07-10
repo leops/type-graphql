@@ -75,6 +75,18 @@ export class Gulpfile {
   // }
 
   /**
+   * Copy and transform source files for browsers.
+   */
+  @Task()
+  packageMoveCompiledBrowserFiles() {
+    return gulp
+      .src("./build/package/**/*.{js,d.ts}")
+      .pipe(replace("const glob = require(\"glob\");", ""))
+      .pipe(replace("return glob.sync(globString);", "throw new Error('findFileNamesFromGlob unsupported in browser');"))
+      .pipe(gulp.dest("./build/package/browser"));
+  }
+
+  /**
    * Removes unnecessary files from final package directory.
    */
   // @Task()
@@ -117,7 +129,7 @@ export class Gulpfile {
     return [
       "clean",
       "packageCompile",
-      // "packageMoveCompiledFiles",
+      // ["packageMoveCompiledFiles", "packageMoveCompiledBrowserFiles"],
       // "packageClearCompileDirectory",
       ["packagePreparePackageFile", "packageReadmeFile"],
     ];

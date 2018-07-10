@@ -43,6 +43,7 @@ import {
 import { ResolverFilterData, ResolverTopicData, TypeResolver } from "../interfaces";
 import { getFieldMetadataFromInputType, getFieldMetadataFromObjectType } from "./utils";
 import { ensureInstalledCorrectGraphQLPackage } from "../utils/graphql-version";
+import isClass from "is-class";
 
 interface AbstractInfo {
   isAbstract: boolean;
@@ -189,7 +190,7 @@ export abstract class SchemaGenerator {
     this.interfaceTypesInfo = getMetadataStorage().interfaceTypes.map<InterfaceTypeInfo>(
       interfaceType => {
         const interfaceSuperClass = Object.getPrototypeOf(interfaceType.target);
-        const hasExtended = interfaceSuperClass.prototype !== undefined;
+        const hasExtended = isClass(interfaceSuperClass);
         const getSuperClassType = () => {
           const superClassTypeInfo = this.interfaceTypesInfo.find(
             type => type.target === interfaceSuperClass,
@@ -248,7 +249,7 @@ export abstract class SchemaGenerator {
 
     this.objectTypesInfo = getMetadataStorage().objectTypes.map<ObjectTypeInfo>(objectType => {
       const objectSuperClass = Object.getPrototypeOf(objectType.target);
-      const hasExtended = objectSuperClass.prototype !== undefined;
+      const hasExtended = isClass(objectSuperClass);
       const getSuperClassType = () => {
         const superClassTypeInfo = this.objectTypesInfo.find(
           type => type.target === objectSuperClass,
@@ -363,7 +364,7 @@ export abstract class SchemaGenerator {
               {},
             );
             // support for extending classes - get field info from prototype
-            if (objectSuperClass.prototype !== undefined) {
+            if (isClass(objectSuperClass)) {
               const superClass = getSuperClassType();
               if (superClass) {
                 const superClassFields = getFieldMetadataFromInputType(superClass);
@@ -493,7 +494,7 @@ export abstract class SchemaGenerator {
           it => it.target === param.getType(),
         )!;
         let superClass = Object.getPrototypeOf(argumentType.target);
-        while (superClass.prototype !== undefined) {
+        while (isClass(superClass)) {
           const superArgumentType = getMetadataStorage().argumentTypes.find(
             it => it.target === superClass,
           )!;

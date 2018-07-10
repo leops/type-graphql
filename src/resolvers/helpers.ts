@@ -8,6 +8,7 @@ import { ResolverData, AuthChecker, AuthMode } from "../interfaces";
 import { Middleware, MiddlewareFn, MiddlewareClass } from "../interfaces/Middleware";
 import { IOCContainer } from "../utils/container";
 import { AuthMiddleware } from "../helpers/auth-middleware";
+import isClass from "is-class";
 
 export async function getParams(
   params: ParamMetadata[],
@@ -88,7 +89,7 @@ export async function applyMiddlewares(
     } else {
       const currentMiddleware = middlewares[currentIndex];
       // arrow function or class
-      if (currentMiddleware.prototype !== undefined) {
+      if (isClass(currentMiddleware)) {
         const middlewareClassInstance = container.getInstance(
           currentMiddleware as MiddlewareClass<any>,
           resolverData,

@@ -23,3 +23,8 @@ declare namespace NodeJS {
     TypeGraphQLMetadataStorage: import("../src/metadata/metadata-storage").MetadataStorage;
   }
 }
+
+declare module 'is-class' {
+  function isClass(fn: any): boolean;
+  export default isClass;
+}
